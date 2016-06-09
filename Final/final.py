@@ -1,13 +1,13 @@
 import gi
-import sys
+gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
+
+import sys
 import numpy as np
 import scipy as sp
 import scipy.linalg
 import warnings
 import pprint
-gi.require_version('Gtk', '3.0')
-
 
 class App4:
     cantidad_vectores_app_1 = None
