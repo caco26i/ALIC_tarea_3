@@ -49,7 +49,7 @@ class App4:
             if combobox_cant_vectores_value.isdigit():
                 self.cantidad_vectores_app_1 = int(combobox_cant_vectores_value)
                 tipo_operacion = "dependencia"
-            else: # en el caso "W ∈ Gen = {U, V}"
+            else:
                 self.cantidad_vectores_app_1 = 3
                 tipo_operacion = "generado"
 
@@ -79,7 +79,7 @@ class App4:
                 App_1.set_current_page(1)
 
     #APP 2
-        
+
     def boton_app_2_llenar_matriz(self, button):
         app_2 = self.builder.get_object("App_2")
         combobox_cant_vectores1 = self.builder.get_object("combobox_cant_vectores1")
@@ -121,7 +121,7 @@ class App4:
             except ValueError:
                 label.set_text('No tiene factorizacion LU')
         app_2.next_page()
-        
+
     def open_first_page(self, button):
         notebook.set_current_page(0)
 
@@ -140,6 +140,3 @@ warnings.filterwarnings('error')
 if __name__ == "__main__":
     main = App4()
     Gtk.main()
-
-
-
