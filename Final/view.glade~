@@ -66,30 +66,10 @@
     </columns>
     <data>
       <row>
-        <col id="0"> Jacobi</col>
+        <col id="0">Jacobi</col>
       </row>
       <row>
         <col id="0" translatable="yes">Gauss-Seidel</col>
-      </row>
-    </data>
-  </object>
-  <object class="GtkListStore" id="liststore_orden_app_3">
-    <columns>
-      <!-- column-name orden -->
-      <column type="gint"/>
-    </columns>
-    <data>
-      <row>
-        <col id="0">2</col>
-      </row>
-      <row>
-        <col id="0">3</col>
-      </row>
-      <row>
-        <col id="0">4</col>
-      </row>
-      <row>
-        <col id="0">5</col>
       </row>
     </data>
   </object>
@@ -157,7 +137,7 @@
                     <property name="margin_right">10</property>
                     <property name="margin_top">80</property>
                     <property name="margin_bottom">10</property>
-                    <signal name="clicked" handler="boton_app_2_llenar_matriz" swapped="no"/>
+                    <signal name="clicked" handler="boton_app_1_llenar_matriz" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
@@ -817,24 +797,6 @@ Matriz</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkButton" id="button1">
-                    <property name="label" translatable="yes">siguiente</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">True</property>
-                    <property name="margin_left">20</property>
-                    <property name="margin_right">10</property>
-                    <property name="margin_top">80</property>
-                    <property name="margin_bottom">10</property>
-                  </object>
-                  <packing>
-                    <property name="left_attach">1</property>
-                    <property name="top_attach">2</property>
-                    <property name="width">1</property>
-                    <property name="height">1</property>
-                  </packing>
-                </child>
-                <child>
                   <object class="GtkLabel" id="label14">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
@@ -848,14 +810,14 @@ Matriz</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkComboBox" id="combobox_cant_vectores3">
+                  <object class="GtkComboBox" id="combobox_metodo">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="margin_left">30</property>
                     <property name="margin_right">10</property>
                     <property name="margin_top">30</property>
                     <property name="margin_bottom">30</property>
-                    <property name="model">liststore_orden_app_3</property>
+                    <property name="model">liststore_metodo_app_2</property>
                     <child>
                       <object class="GtkCellRendererText" id="cellrenderertext2"/>
                       <attributes>
@@ -866,6 +828,83 @@ Matriz</property>
                   <packing>
                     <property name="left_attach">1</property>
                     <property name="top_attach">1</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="label20">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="label" translatable="yes">Indique el maximo error relativo permitido</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">2</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkButton" id="button1">
+                    <property name="label" translatable="yes">siguiente</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="margin_left">20</property>
+                    <property name="margin_right">10</property>
+                    <property name="margin_top">80</property>
+                    <property name="margin_bottom">10</property>
+                    <signal name="clicked" handler="boton_app_2_llenar_matriz" swapped="no"/>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="top_attach">4</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkEntry" id="max_error">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="invisible_char">●</property>
+                    <property name="primary_icon_activatable">False</property>
+                    <property name="secondary_icon_activatable">False</property>
+                    <property name="input_purpose">digits</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="top_attach">2</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="label21">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="label" translatable="yes">Indique el maximo de iteraciones</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">3</property>
+                    <property name="width">1</property>
+                    <property name="height">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkEntry" id="max_iteraciones">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="invisible_char">●</property>
+                    <property name="primary_icon_activatable">False</property>
+                    <property name="secondary_icon_activatable">False</property>
+                    <property name="input_purpose">digits</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="top_attach">3</property>
                     <property name="width">1</property>
                     <property name="height">1</property>
                   </packing>
@@ -911,7 +950,7 @@ Matriz</property>
                               <object class="GtkLabel" id="label8">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">M = ( </property>
+                                <property name="label" translatable="yes">S = {</property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -1460,62 +1499,11 @@ Matriz</property>
                                     <property name="position">4</property>
                                   </packing>
                                 </child>
-                                <child>
-                                  <object class="GtkHBox" id="hbox11">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
-                                    <child>
-                                      <object class="GtkLabel" id="label20">
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">False</property>
-                                        <property name="label" translatable="yes">Indique el maximo error relativo permitido.</property>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">True</property>
-                                        <property name="fill">True</property>
-                                        <property name="position">0</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <object class="GtkEntry" id="entry_matrix2_4_5">
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">True</property>
-                                        <property name="invisible_char">●</property>
-                                        <property name="primary_icon_activatable">False</property>
-                                        <property name="secondary_icon_activatable">False</property>
-                                        <property name="input_purpose">digits</property>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">True</property>
-                                        <property name="fill">True</property>
-                                        <property name="position">1</property>
-                                      </packing>
-                                    </child>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">True</property>
-                                    <property name="fill">False</property>
-                                    <property name="position">5</property>
-                                  </packing>
-                                </child>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">False</property>
                                 <property name="position">1</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkLabel" id="label9">
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="label" translatable="yes">)</property>
-                              </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">True</property>
-                                <property name="padding">15</property>
-                                <property name="position">2</property>
                               </packing>
                             </child>
                           </object>
@@ -1527,11 +1515,14 @@ Matriz</property>
                         </child>
                         <child>
                           <object class="GtkButton" id="button_siguiente2">
-                            <property name="label" translatable="yes">Calcular Ecuacion</property>
+                            <property name="label" translatable="yes">Calcular Sistema de Ecuaciones</property>
                             <property name="width_request">10</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
+                            <property name="relief">none</property>
+                            <property name="xalign">0.49000000953674316</property>
+                            <signal name="clicked" handler="calcular_sistema" swapped="no"/>
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -1665,5 +1656,25 @@ Matriz</property>
         </child>
       </object>
     </child>
+  </object>
+  <object class="GtkListStore" id="liststore_orden_app_3">
+    <columns>
+      <!-- column-name orden -->
+      <column type="gint"/>
+    </columns>
+    <data>
+      <row>
+        <col id="0">2</col>
+      </row>
+      <row>
+        <col id="0">3</col>
+      </row>
+      <row>
+        <col id="0">4</col>
+      </row>
+      <row>
+        <col id="0">5</col>
+      </row>
+    </data>
   </object>
 </interface>
