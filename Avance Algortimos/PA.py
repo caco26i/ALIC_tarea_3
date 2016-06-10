@@ -1,8 +1,6 @@
 import pprint
 
 def mult_matrix(M, N):
-    
-
                                                                                                                                                                                                        
     tuple_N = zip(*N)
 
@@ -14,12 +12,12 @@ def pivot_matrix(M):
     m = len(M)
 
     # Crear una  matriz, identica con  valores flotantes                                                                                                                                                                                            
-    id_mat = [[float(i ==j) for i in xrange(m)] for j in xrange(m)]
+    id_mat = [[float(i ==j) for i in range(m)] for j in range(m)]
 
     # Reordenar la matriz identidad de manera que el elemento mas grande de cada columna
     # de M se coloque en la diagonal de M                                                                                                                                                                                            
-    for j in xrange(m):
-        row = max(xrange(j, m), key=lambda i: abs(M[i][j]))
+    for j in range(m):
+        row = max(range(j, m), key=lambda i: abs(M[i][j]))
         if j != row:
             # intercambiar filas                                                                                                                                                                                                                            
             id_mat[j], id_mat[row] = id_mat[row], id_mat[j]
@@ -32,26 +30,26 @@ def lu_decomposition(A):
     n = len(A)
 
     # crear matrices nulas para L y U                                                                                                                                                                                                                 
-    L = [[0.0] * n for i in xrange(n)]
-    U = [[0.0] * n for i in xrange(n)]
+    L = [[0.0] * n for i in range(n)]
+    U = [[0.0] * n for i in range(n)]
 
     # Crear el pivote de la matriz P y el producto de PA                                                                                                                                                                                         
     P = pivot_matrix(A)
     PA = mult_matrix(P, A)
 
     # Descomposicion  LU                                                                                                                                                                                                                    
-    for j in xrange(n):
+    for j in range(n):
         # todas las  diagonales de L son unidad                                                                                                                                                                                                   
         L[j][j] = 1.0
 
         # LaTeX: u_{ij} = a_{ij} - \sum_{k=1}^{i-1} u_{kj} l_{ik}                                                                                                                                                                                      
-        for i in xrange(j+1):
-            s1 = sum(U[k][j] * L[i][k] for k in xrange(i))
+        for i in range(j+1):
+            s1 = sum(U[k][j] * L[i][k] for k in range(i))
             U[i][j] = PA[i][j] - s1
 
         # LaTeX: l_{ij} = \frac{1}{u_{jj}} (a_{ij} - \sum_{k=1}^{j-1} u_{kj} l_{ik} )                                                                                                                                                                  
-        for i in xrange(j, n):
-            s2 = sum(U[k][j] * L[i][k] for k in xrange(j))
+        for i in range(j, n):
+            s2 = sum(U[k][j] * L[i][k] for k in range(j))
             L[i][j] = (PA[i][j] - s2) / U[j][j]
 
     return (P, L, U)
@@ -60,14 +58,14 @@ def lu_decomposition(A):
 A = [[7, 3, -1, 2], [3, 8, 1, -4], [-1, 1, 4, -1], [2, -4, -1, 6]]
 P, L, U = lu_decomposition(A)
 
-print "A:"
+print ("A:")
 pprint.pprint(A)
 
-print "P:"
+print ("P:")
 pprint.pprint(P)
 
-print "L:"
+print ("L:")
 pprint.pprint(L)
 
-print "U:"
+print ("U:")
 pprint.pprint(U)

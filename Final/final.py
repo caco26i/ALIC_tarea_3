@@ -3,9 +3,9 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 
 import sys
-import numpy as np
-import scipy as sp
-import scipy.linalg
+#import numpy as np
+#import scipy as sp
+#import scipy.linalg
 import warnings
 import pprint
 
@@ -49,7 +49,7 @@ class App4:
             if combobox_cant_vectores_value.isdigit():
                 self.cantidad_vectores_app_1 = int(combobox_cant_vectores_value)
                 tipo_operacion = "dependencia"
-            else: # en el caso "W ∈ Gen = {U, V}"
+            else:
                 self.cantidad_vectores_app_1 = 3
                 tipo_operacion = "generado"
 
@@ -78,7 +78,7 @@ class App4:
             else:
                 App_1.set_current_page(1)
 
-    #APP 2
+    #APP 1
         
     def boton_app_2_llenar_matriz(self, button):
         app_2 = self.builder.get_object("App_2")
@@ -86,7 +86,6 @@ class App4:
         combobox_cant_vectores1_value = self.get_combo_value(combobox_cant_vectores1)
         print(combobox_cant_vectores1_value)
         if combobox_cant_vectores1_value is not None:
-            print("Entro al if")
             self.orden_matriz_app_2 = combobox_cant_vectores1_value
             for i in range(0, 5):
                 for j in range(0, 5):
@@ -116,8 +115,8 @@ class App4:
         label = self.builder.get_object("label_base_app_2")
         if isValid:
             try:
-                P, L, U = sp.linalg.lu(sp.array(matriz_elementos))
-                label.set_text("P = \n" + str(P) + " \n\nL = \n" + str(L) + " \n\nU = \n" + str(U))
+                P, L, U = lu_decomposition(matriz_elementos)
+                label.set_text("P = \n" + formatMatrix(P) + " \n\nL = \n" + formatMatrix(L) + " \n\nU = \n" + formatMatrix(U))
             except ValueError:
                 label.set_text('No tiene factorizacion LU')
         app_2.next_page()
@@ -133,9 +132,70 @@ class App4:
             return model[tree_iter][0]
 
 
-    # App 3
+    # App 2
 
 warnings.filterwarnings('error')
+
+def mult_matrix(M, N):
+                                                                                                                                                                                                       
+    tuple_N = zip(*N)
+
+    # comprension de la lista anidada para calcular el producto de matrices                                                                                                                                                                                     
+    return [[sum(el_m * el_n for el_m, el_n in zip(row_m, col_n)) for col_n in tuple_N] for row_m in M]
+
+def pivot_matrix(M):
+    """Returna el pivote de la matriz  M"""
+    m = len(M)
+
+    # Crear una  matriz, identica con  valores flotantes                                                                                                                                                                                            
+    id_mat = [[float(i ==j) for i in range(m)] for j in range(m)]
+
+    # Reordenar la matriz identidad de manera que el elemento mas grande de cada columna
+    # de M se coloque en la diagonal de M                                                                                                                                                                                            
+    for j in range(m):
+        row = max(range(j, m), key=lambda i: abs(M[i][j]))
+        if j != row:
+            # intercambiar filas                                                                                                                                                                                                                            
+            id_mat[j], id_mat[row] = id_mat[row], id_mat[j]
+
+    return id_mat
+
+def lu_decomposition(A):
+    """Hacer Decomposicion LU de A (debe ser cuadrada)                                                                                                                                                                                        
+     PA = LU. la funcion retorna P, L y U."""
+    n = len(A)
+
+    # crear matrices nulas para L y U                                                                                                                                                                                                                 
+    L = [[0.0] * n for i in range(n)]
+    U = [[0.0] * n for i in range(n)]
+
+    # Crear el pivote de la matriz P y el producto de PA                                                                                                                                                                                         
+    P = pivot_matrix(A)
+    PA = mult_matrix(P, A)
+
+    # Descomposicion  LU                                                                                                                                                                                                                    
+    for j in range(n):
+        # todas las  diagonales de L son unidad                                                                                                                                                                                                   
+        L[j][j] = 1.0
+
+        for i in range(j+1):
+            s1 = sum(U[k][j] * L[i][k] for k in range(i))
+            U[i][j] = PA[i][j] - s1
+                                                                                                                                                                
+        for i in range(j, n):
+            s2 = sum(U[k][j] * L[i][k] for k in range(j))
+            L[i][j] = (PA[i][j] - s2) / U[j][j]
+
+    return (P, L, U)
+    
+def formatMatrix(pMatrix):
+    resultado = ""
+    for i in range (len(pMatrix)):
+        for j in range (len(pMatrix[0])):
+            resultado += str(pMatrix[i][j])
+            resultado += "\t"
+        resultado += "\n"
+    return resultado
 
 if __name__ == "__main__":
     main = App4()
