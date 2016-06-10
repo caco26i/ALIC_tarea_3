@@ -1,3 +1,4 @@
+from __future__ import division								
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
@@ -161,7 +162,8 @@ class App4:
 	def calcular_sistema(self, button):
 		app_2 = self.builder.get_object("App_1")
 		isValid = True
-		matriz_elementos = []
+		matriz_elementos = []		
+		matriz_respuesta = []
 		for i in range(0, self.orden_matriz_app_2):
 			temp_list = []
 			for j in range (0, self.orden_matriz_app_2):
@@ -172,36 +174,148 @@ class App4:
 				else:
 					isValid = False
 					break
+
+			field_respuesta = self.builder.get_object("entry_matrix_" + str(i) + "_r")
+			if field_respuesta.get_text().lstrip('-').isdigit():
+				value_field_respuesta = float(field_respuesta.get_text())
+				matriz_respuesta.append(value_field_respuesta)
+			else:
+				isValid = False
+
 			if not isValid:
 				break
-				field_respuesta = self.builder.get_object("entry_matrix_" + str(i) + "_r")
-				if field_respuesta.get_text().lstrip('-').isdigit():
-					value_field_respuesta = float(field_respuesta.get_text())
-					matriz_elementos.append(value_field_respuesta)
-					matriz_elementos.append(temp_list)
 
 			matriz_elementos.append(temp_list)
 
 		label = self.builder.get_object("label_base_app_2")
 		if isValid:
-			print matriz_elementos
+			if self.metodo_app_2 == "Jacobi":
+				print "es Jacobi"
+				self.jacobi_reg(matriz_elementos, self.max_error_app_2, self.max_iteraciones_app_2)											
+			else:
+				print "es Gauss-Seidel"
+
+			print matriz_elementos			
+			print matriz_respuesta
 			app_2.next_page()
+
+
+	##### Inicio de la funcion que aplica los metodos	######
+
+	def jacobi_reg(self, mat, Error, MaX): 
+		columnas = 0
+		numIT = 1									
+		switchh = False	
+
+	##### Aplica	metodo Gauss-Jacobi ######
+
+		filas = len(mat)															
+		for C in mat[0]:
+			columnas += 1																 
+
+		print ">> Dimension de la Matriz: [%d][%d]\n" %(filas, columnas)	## Imprime numero de filas x columnas
+		if ((columnas - filas) != 1):
+			print ">> *** Existen mas filas	que columnas ***\n"
+			sys.exit(1)
+
+		###### Primer iteracion ######
+		B = list(zip(*mat)[-1])												## B[] Vector que guarda la ultima columna de la matriz
+		X0 = [B[i]/mat[i][i] for i in xrange(filas)]	## Guarda	resultado de X[i]= b1/a11 , X[i]=b2/a22 etc..
+		X1 = list(X0)																	## X1(actual) = X0(anterior)
+
+		###### Segunda iteracion ######
+		numIT += 1									
+		while not switchh:
+			sup = 0
+			div = 0
+
+			for i in xrange(filas):
+				X1[i] = B[i]
+				for j in xrange(columnas-1):
+					if ( i != j):
+						X1[i]=	(X1[i] - (mat[i][j] * X0[j]))
+
+				X1[i] =	(1/mat[i][i] * X1[i])
+				aux = X1[i] - X0[i]
+				if (aux < 0) :
+					aux = aux * -1
+				aux2 = X1[i]
+				if (aux2 < 0):
+					aux2 = aux2 * -1
+				if (aux > sup):
+					sup = aux
+				if (aux2 > div):
+					div = aux2
+			X0 = list(X1)
+			if (sup / div) <= Error:
+				switchh = True 
+				numIT += 1
+			if int(numIT) > int(MaX):
+				print ">> **Imposible** encontrar resultado en %s *iteraciones*.\n" % MaX	 
+				sys.exit(0)
+	 
+		printM(mat)																			 
+		my_cont = 0
+		print "*** GauSS-JaCoBi ***"
+		for i in X0:																		 ## Imprime	X, resultados de gauss-jacobi
+			print "X%d = %f" % ((my_cont+1), i)
+			my_cont += 1
+		print "\n>> Numero de iteraciones: %d " % numIT
+		print ">> Valor do error: %s" % Error
+
+		####### Fin de Gauss-
+
+		for a in xrange(1, filas):											## Checar a a triangular inferior	
+			for b in xrange(0, columnas):								 
+				if (int(a) != int(b)):
+					if (int(mat[a][b]) != 0):
+						print ">> **Imposible** calcular	triangular inferior * debe ser diferente de 0*\n" 
+						sys.exit(0)
+				elif (int(a) == int(b)):
+						break
+				
+		switchh = False
+		i = filas-1
+		j = i 
+		B[j] = B[j] / mat[i][j]
+		i -= 1
+
+		j = i
+		t = 0
+		numIT = 1
+		columnas -= 1
+
+		while not (switchh):
+			div = 0
+			numIT += 1
+			for t in xrange(j+1, columnas):
+				div = div + (mat[i][t] * B[t])
+			B[j] = (B[j] - div) / mat[i][j]
+			if int(i) == 0:
+				switchh = True
+			i -= 1
+			j = i
+
+		my_cont = 0
+		for i in B:																 ## Imprime B, vetor que guarda resultados retornados
+			print "B%d = %f" % ((my_cont+1), i)
+			my_cont += 1 
 	
 	
 warnings.filterwarnings('error')
 
 def mult_matrix(M, N):
-																																																	   
+																																																		 
 	tuple_N = zip(*N)
 
 	# comprension de la lista anidada para calcular el producto de matrices																																													 
 	return [[sum(el_m * el_n for el_m, el_n in zip(row_m, col_n)) for col_n in tuple_N] for row_m in M]
 
 def pivot_matrix(M):
-	"""Returna el pivote de la matriz  M"""
+	"""Returna el pivote de la matriz	M"""
 	m = len(M)
 
-	# Crear una  matriz, identica con  valores flotantes																																															
+	# Crear una	matriz, identica con	valores flotantes																																															
 	id_mat = [[float(i ==j) for i in range(m)] for j in range(m)]
 
 	# Reordenar la matriz identidad de manera que el elemento mas grande de cada columna
@@ -227,9 +341,9 @@ def lu_decomposition(A):
 	P = pivot_matrix(A)
 	PA = mult_matrix(P, A)
 
-	# Descomposicion  LU																																																					
+	# Descomposicion	LU																																																					
 	for j in range(n):
-		# todas las  diagonales de L son unidad																																																   
+		# todas las	diagonales de L son unidad																																																	 
 		L[j][j] = 1.0
 
 		for i in range(j+1):
@@ -254,3 +368,41 @@ def formatMatrix(pMatrix):
 if __name__ == "__main__":
 	main = App4()
 	Gtk.main()
+
+
+############# JACOBI
+
+
+class InvalidSizeError(Exception):
+	"""Excepcion en caso que las matrices tengan un tamnio no adecuado"""
+	pass
+
+def printM(m):																 
+	
+	for j in m:
+		for elem in j:
+			print "%3d" % elem, 
+		print ""
+	print ""
+
+def readM():																	 
+	
+	 matriz = []																 
+	 lastsize = 0																## Guarda	tamanio de la ultima fila leida 
+																							 
+
+	 print ">> Ingrese MATRIZ:	(fila	en blanco para terminar):"
+	 while 1:
+			r = sys.stdin.readline()								 
+			if r.strip():														
+				l = r.split()												 
+																							 ##.. '1 2	 32 1 2' --> ['1', '2', '32', '1', '2']
+				s = len(l)														 
+				if lastsize and	s != lastsize:				
+					raise InvalidSizeError, "As linhas devem ter todas o mesmo numero de colunas." 
+				matriz.append([float(elem) for elem in l]) ## Convierte los elementos de la fila a enteros
+																								 ##.. e coloca la matriz
+				lastsize = s													 
+			else:
+				break										 
+	 return matriz									

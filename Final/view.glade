@@ -1520,7 +1520,6 @@ Matriz</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
-                            <property name="relief">none</property>
                             <property name="xalign">0.49000000953674316</property>
                             <signal name="clicked" handler="calcular_sistema" swapped="no"/>
                           </object>
