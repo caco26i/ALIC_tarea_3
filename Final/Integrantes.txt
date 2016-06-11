@@ -2,4 +2,4 @@ Integrantes:
 	Federico Montealegre
 	Jeffrey Alvarado
 	Dario Monestel
-	Isaac Campos 2014004626
+	Isaac Campos
