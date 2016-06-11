@@ -9,6 +9,7 @@ import pprint
 import numpy as np
 import scipy as sp
 import scipy.linalg 
+from scipy.linalg import solve
 
 class App4:
 	cantidad_vectores_app_1 = None
@@ -191,12 +192,16 @@ class App4:
 		if isValid:
 			if self.metodo_app_2 == "Jacobi":
 				try:
-					res = jacobi(np.array(matriz_elementos), np.array(matriz_respuesta), int(self.max_iteraciones_app_2), float(self.max_error_app_2))
+					res = jacobi(np.array(matriz_elementos), np.array(matriz_respuesta), int(self.max_iteraciones_app_2), float(self.max_error_app_2), np.zeros_like(matriz_respuesta))
 					label.set_text(res)
 				except:
 					label.set_text("El sistema no tiene solucion")
 			else:
-				print ("es Gauss-Seidel")
+				try:
+					res = gauss(np.array(matriz_elementos), np.array(matriz_respuesta), int(self.max_iteraciones_app_2), float(self.max_error_app_2), np.zeros_like(matriz_respuesta))
+					label.set_text(res)
+				except:
+					label.set_text("El sistema no tiene solucion")
 			app_2.next_page()
 
 	
@@ -204,17 +209,15 @@ warnings.filterwarnings('error')
 
 ###Jacobi
 
-def jacobi(A, b, iterationLimit, error):
+def jacobi(A, b, iterationLimit, errorMargin, x):
 	
 	resultado = ""
 
-	# prints the system
 	resultado += "Sistema:\n"
 	for i in range(A.shape[0]):
 			row = ["{}*x{}".format(A[i, j], j + 1) for j in range(A.shape[1])]
 			resultado += " + " + str(row) + "=" + str(b[i]) + "\n"
 
-	x = np.zeros_like(b)
 	for it_count in range(iterationLimit):
 			resultado += "\nIteracion :" + str(it_count)
 			resultado += "\n+Solucion actual: " + str(x) + "\n"
@@ -225,7 +228,7 @@ def jacobi(A, b, iterationLimit, error):
 					s2 = np.dot(A[i, i + 1:], x[i + 1:])
 					x_new[i] = (b[i] - s1 - s2) / A[i, i]
 
-			if np.allclose(x, x_new, atol=error):
+			if np.allclose(x, x_new, atol=errorMargin):
 					break
 
 			x = x_new
@@ -233,11 +236,37 @@ def jacobi(A, b, iterationLimit, error):
 			error = np.dot(A, x) - b
 			resultado += "+Error: " + str(error) + "\n"
 		
-	resultado += "+Error:" + str(error) + "\n"
 	resultado += "\n\nSolucion final:" + str(x) + "\n"
 
 	return resultado
+	
+###Gauss-Seidel
 
+def gauss(A, b, iterationLimit, error, x):
+    
+    resultado = ""
+    
+    resultado += "Sistema:\n"
+    for i in range(A.shape[0]):
+        row = ["{}*x{}".format(A[i, j], j + 1) for j in range(A.shape[1])]
+        resultado += " + " + str(row) + "=" + str(b[i]) + "\n"
+    
+    L = np.tril(A)
+    U = A - L
+    for i in range(iterationLimit):
+        resultado += "\nIteracion :" + str(i)
+        resultado += "\n+Solucion actual: " + str(x) + "\n"
+        x_new = np.zeros_like(x)
+        x_new = np.dot(np.linalg.inv(L), b - np.dot(U, x))
+        
+        if np.allclose(x, x_new, atol=error):
+            break
+        x = x_new
+        
+        error = np.dot(A, x) - b
+        resultado += "+Error: " + str(error) + "\n"
+    resultado += "\n\nSolucion final:" + str(x) + "\n"
+    return resultado
 
 if __name__ == "__main__":
 	main = App4()
