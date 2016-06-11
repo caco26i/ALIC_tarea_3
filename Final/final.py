@@ -187,14 +187,14 @@ class App4:
 
 			matriz_elementos.append(temp_list)
 
-		label = self.builder.get_object("label_base_app_2")
+		label = self.builder.get_object("label_base_app_1")
 		if isValid:
 			if self.metodo_app_2 == "Jacobi":
 				try:
 					res = jacobi(np.array(matriz_elementos), np.array(matriz_respuesta), int(self.max_iteraciones_app_2), float(self.max_error_app_2))
-					print (res)
+					label.set_text(res)
 				except:
-					print("El sistema no tiene solucion")
+					label.set_text("El sistema no tiene solucion")
 			else:
 				print ("es Gauss-Seidel")
 			app_2.next_page()
@@ -209,14 +209,15 @@ def jacobi(A, b, iterationLimit, error):
 	resultado = ""
 
 	# prints the system
-	resultado += "System:\n"
+	resultado += "Sistema:\n"
 	for i in range(A.shape[0]):
 			row = ["{}*x{}".format(A[i, j], j + 1) for j in range(A.shape[1])]
 			resultado += " + " + str(row) + "=" + str(b[i]) + "\n"
 
 	x = np.zeros_like(b)
 	for it_count in range(iterationLimit):
-			resultado += "\n\nSolucion actual:" + str(x) + "\n"
+			resultado += "\nIteracion :" + str(it_count)
+			resultado += "\n+Solucion actual: " + str(x) + "\n"
 			x_new = np.zeros_like(x)
 
 			for i in range(A.shape[0]):
@@ -230,8 +231,9 @@ def jacobi(A, b, iterationLimit, error):
 			x = x_new
 
 			error = np.dot(A, x) - b
-			resultado += "Error:" + str(error) + "\n"
-
+			resultado += "+Error: " + str(error) + "\n"
+		
+	resultado += "+Error:" + str(error) + "\n"
 	resultado += "\n\nSolucion final:" + str(x) + "\n"
 
 	return resultado
